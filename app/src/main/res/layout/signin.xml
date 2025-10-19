@@ -10,17 +10,17 @@
 
     <!-- Logo -->
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/logo_card_signup"
+        android:id="@+id/logo_card"
         android:layout_width="80dp"
         android:layout_height="80dp"
         app:cardBackgroundColor="#50D387"
         app:cardCornerRadius="20dp"
         app:cardElevation="0dp"
-        app:layout_constraintBottom_toTopOf="@id/title_signup"
+        app:layout_constraintBottom_toTopOf="@id/title_signin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.2"
+        app:layout_constraintVertical_bias="0.3"
         app:layout_constraintVertical_chainStyle="packed">
 
         <TextView
@@ -34,68 +34,49 @@
 
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- Sign Up Title -->
+    <!-- Sign In Title -->
     <TextView
-        android:id="@+id/title_signup"
+        android:id="@+id/title_signin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="Sign Up"
+        android:text="Sign In"
         android:textColor="@android:color/black"
         android:textSize="34sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@id/subtitle_signup"
+        app:layout_constraintBottom_toTopOf="@id/subtitle_signin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/logo_card_signup" />
+        app:layout_constraintTop_toBottomOf="@id/logo_card" />
 
     <!-- Subtitle -->
     <TextView
-        android:id="@+id/subtitle_signup"
+        android:id="@+id/subtitle_signin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="First create your account"
+        android:text="Enter your email and password"
         android:textColor="@android:color/darker_gray"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@id/fullname_layout"
+        app:layout_constraintBottom_toTopOf="@id/email_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/title_signup" />
+        app:layout_constraintTop_toBottomOf="@id/title_signin" />
 
-    <!-- Full Name Input -->
+    <!-- Email Input -->
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/fullname_layout"
+        android:id="@+id/email_layout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:hint="Full name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/subtitle_signup">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/fullname_edit_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPersonName" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <!-- Email Input -->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/email_layout_signup"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:hint="Email"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/fullname_layout">
+        app:layout_constraintTop_toBottomOf="@id/subtitle_signin">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/email_edit_text_signup"
+            android:id="@+id/email_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress" />
@@ -103,7 +84,7 @@
 
     <!-- Password Input -->
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/password_layout_signup"
+        android:id="@+id/password_layout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -112,51 +93,43 @@
         app:endIconMode="password_toggle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/email_layout_signup">
+        app:layout_constraintTop_toBottomOf="@id/email_layout">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/password_edit_text_signup"
+            android:id="@+id/password_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Confirm Password Input -->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/confirm_password_layout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="0dp"
+    <!-- Forgot Password -->
+    <TextView
+        android:id="@+id/forgot_password_text"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:hint="Confirm your password"
-        app:endIconMode="password_toggle"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/password_layout_signup">
+        android:layout_marginTop="8dp"
+        android:text="Forgot password?"
+        android:textColor="#FFA500"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="@id/password_layout"
+        app:layout_constraintTop_toBottomOf="@id/password_layout" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/confirm_password_edit_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPassword" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <!-- Sign Up Button -->
+    <!-- Login Button -->
     <Button
-        android:id="@+id/signup_button"
+        android:id="@+id/login_button"
         android:layout_width="0dp"
         android:layout_height="60dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="24dp"
         android:backgroundTint="@android:color/black"
-        android:text="SIGN UP"
+        android:text="LOGIN"
         android:textColor="@android:color/white"
         android:textSize="16sp"
         app:cornerRadius="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/confirm_password_layout" />
+        app:layout_constraintTop_toBottomOf="@id/forgot_password_text" />
 
-    <!-- Login Prompt -->
+    <!-- Sign Up Prompt -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -164,20 +137,21 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/signup_button">
+        app:layout_constraintTop_toBottomOf="@id/login_button">
 
         <TextView
+            android:id="@+id/dont_have_account_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Already have an account? "
+            android:text="Dont have an account? "
             android:textColor="@android:color/darker_gray"
             android:textSize="14sp" />
 
         <TextView
-            android:id="@+id/login_text_prompt"
+            android:id="@+id/sign_up_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Login"
+            android:text="Sign up"
             android:textColor="#FFA500"
             android:textSize="14sp"
             android:textStyle="bold" />
