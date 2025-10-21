@@ -1,38 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:padding="8dp">
 
-    <!-- Card for the book cover to give it a nice shadow and rounded corners -->
-    <com.google.android.material.card.MaterialCardView
-        android:layout_width="match_parent"
+    <ImageView
+        android:id="@+id/book_cover_image" 
+        android:layout_width="0dp"
         android:layout_height="200dp"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="4dp">
+        android:scaleType="centerCrop"
+        android:src="@drawable/icon"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-        <ImageView
-            android:id="@+id/book_cover_image"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            tools:srcCompat="@tools:sample/backgrounds/scenic" />
-
-    </com.google.android.material.card.MaterialCardView>
-
-    <!-- TextView for the book title -->
     <TextView
-        android:id="@+id/book_title_text"
-        android:layout_width="wrap_content"
+        android:id="@+id/book_title"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:ellipsize="end"
         android:maxLines="1"
-        android:textColor="@color/black"
+        android:ellipsize="end"
         android:textStyle="bold"
-        tools:text="The Great Gatsby" />
+        android:textColor="@android:color/black"
+        app:layout_constraintTop_toBottomOf="@+id/book_cover_image"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="Book Title" />
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/book_author"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textSize="12sp"
+        android:textColor="@android:color/darker_gray"
+        app:layout_constraintTop_toBottomOf="@+id/book_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="Author Name" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

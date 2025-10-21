@@ -1,57 +1,55 @@
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.widget.Toast
-import androidx.compose.ui.layout.layout
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+package com.example.booknest3
 
-class HomeActivity : AppCompatActivity() {
+import android.os.Bundle
+import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
+
+class MainActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.home)
+        setContentView(R.layout.activity_main)
 
-        // Find your views from the XML layout
-        val bottomNavView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
-        val fabDraft = findViewById<FloatingActionButton>(R.id.fab_draft)
+        val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_nav)
 
-        // --- THIS IS THE REUSABLE NAVIGATION LOGIC ---
-        bottomNavView.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.navigation_home -> {
-                    // Navigate to Home or refresh the current screen
-                    Toast.makeText(this, "Home Clicked", Toast.LENGTH_SHORT).show()
-                    true // Return true to show the item as selected
-                }
-                R.id.navigation_save -> {
-                    // Navigate to Saved screen/fragment
-                    Toast.makeText(this, "Save Clicked", Toast.LENGTH_SHORT).show()
-                    true
-                }
-                R.id.navigation_drafts -> {
-                    // Navigate to Drafts screen/fragment
-                    Toast.makeText(this, "Drafts Clicked", Toast.LENGTH_SHORT).show()
-                    true
-                }
-                R.id.navigation_downloads -> {
-                    // Navigate to Downloads screen/fragment
-                    Toast.makeText(this, "Downloads Clicked", Toast.LENGTH_SHORT).show()
-                    true
-                }
-                R.id.navigation_profile -> {
-                    // Navigate to Profile screen/fragment
-                    Toast.makeText(this, "Profile Clicked", Toast.LENGTH_SHORT).show()
-                    true
-                }
-                else -> false // Return false for items you don't handle
-            }
+        if (savedInstanceState == null) {
+            // Ibinalik ko na po ang LoginFragment bilang unang screen para sa Firebase Auth.
+            replaceFragment(LoginFragment(), false)
         }
 
-        // --- Optional: Handle the Floating Action Button click ---
-        fabDraft.setOnClickListener {
-            Toast.makeText(this, "Create Draft Clicked", Toast.LENGTH_SHORT).show()
-            // Start a new activity to create a draft, for example:
-            // val intent = Intent(this, CreateDraftActivity::class.java)
-            // startActivity(intent)
+        bottomNav.setOnItemSelectedListener { item ->
+            val selectedFragment: Fragment = when (item.itemId) {
+                R.id.nav_home -> HomeFragment()
+                R.id.nav_bookmarks -> BookmarksFragment()
+                R.id.nav_edit -> DraftListFragment()
+                R.id.nav_downloads -> DownloadsFragment()
+                R.id.nav_profile -> ProfileFragment()
+                else -> HomeFragment()
+            }
+            replaceFragment(selectedFragment)
+            true
+        }
+    }
+
+    // Inalis ko na po ang "private" para magamit ng ibang Fragments.
+    fun replaceFragment(fragment: Fragment, addToBackStack: Boolean = true) {
+        val transaction = supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+
+        if (addToBackStack) {
+            transaction.addToBackStack(null)
+        }
+
+        transaction.commit()
+
+        // I-handle ang visibility ng bottom nav.
+        val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_nav)
+        if (fragment is LoginFragment || fragment is SignupFragment) {
+            bottomNav.visibility = View.GONE
+        } else {
+            bottomNav.visibility = View.VISIBLE
         }
     }
 }

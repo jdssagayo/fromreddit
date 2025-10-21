@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_toggle_theme"
+        android:icon="@drawable/ic_edit"
+        android:title="Toggle Theme"
+        app:showAsAction="ifRoom" />
+
+    <!-- Ang mga items sa ibaba ay automatic na pong mapupunta sa loob ng three-dots menu -->
+    <item
+        android:id="@+id/action_save_draft_toolbar"
+        android:title="Save Draft"
+        android:icon="@drawable/ic_save"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_export_book_toolbar"
+        android:title="Export Book"
+        android:icon="@drawable/ic_download"
+        app:showAsAction="never" />
+
+</menu>

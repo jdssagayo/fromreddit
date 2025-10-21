@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    tools:context=".ProfileFragment">
+
+    <!-- Header -->
+    <ImageView
+        android:id="@+id/back_arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_back_arrow"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/profile_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="My Profile"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/back_arrow"
+        app:layout_constraintBottom_toBottomOf="@id/back_arrow" />
+
+    <!-- Profile Info -->
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profile_image"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/saitama_placeholder"
+        app:layout_constraintTop_toBottomOf="@id/profile_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/profile_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Saitama"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/profile_image"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/profile_handle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@saitama.1"
+        app:layout_constraintTop_toBottomOf="@+id/profile_name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Stats -->
+    <LinearLayout
+        android:id="@+id/stats_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/profile_handle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="12\nFollowing" android:gravity="center" android:layout_marginEnd="24dp"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="9\nFollowers" android:gravity="center" android:layout_marginEnd="24dp"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="4.3\nRating" android:gravity="center"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/profile_bio"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:text="Avid reader &amp; indie author | Fantasy &amp; Sci-Fi enthusiast | Currently writing my debut novel\nwww.facebook.blahblah"
+        app:layout_constraintTop_toBottomOf="@+id/stats_layout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"/>
+
+    <!-- Card Stats -->
+    <LinearLayout
+        android:id="@+id/card_stats_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        android:weightSum="3"
+        app:layout_constraintTop_toBottomOf="@+id/profile_bio"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp">
+        <com.google.android.material.card.MaterialCardView style="@style/StatCard"><TextView style="@style/StatText" android:text="Books read\n1"/></com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.card.MaterialCardView style="@style/StatCard"><TextView style="@style/StatText" android:text="Published\n3"/></com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.card.MaterialCardView style="@style/StatCard"><TextView style="@style/StatText" android:text="Streak\n7 days"/></com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
+
+    <!-- Tabs -->
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tab_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:tabGravity="fill"
+        app:tabMode="fixed"
+        app:layout_constraintTop_toBottomOf="@+id/card_stats_layout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.tabs.TabItem android:text="Reading" />
+        <com.google.android.material.tabs.TabItem android:text="Done" />
+        <com.google.android.material.tabs.TabItem android:text="Published" />
+
+    </com.google.android.material.tabs.TabLayout>
+
+    <!-- Book List -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/books_recycler_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/tab_layout"
+        app:layout_constraintBottom_toTopOf="@+id/sign_out_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:listitem="@layout/item_book_profile"/>
+
+    <!-- Sign Out Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/sign_out_button"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="Sign Out"
+        android:backgroundTint="#FF1744"
+        app:cornerRadius="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,31 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="RatingBar" parent="Widget.AppCompat.RatingBar.Small">
+        <!-- Define custom properties for your rating bar style -->
+    </style>
+
+    <!-- Styles for Profile Screen Stats -->
+    <style name="StatCard" parent="Widget.MaterialComponents.CardView">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_margin">4dp</item>
+        <item name="cardElevation">2dp</item>
+        <item name="cardCornerRadius">8dp</item>
+    </style>
+
+    <style name="StatText" parent="Widget.AppCompat.TextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:lineSpacingExtra">4sp</item>
+    </style>
+
+</resources>

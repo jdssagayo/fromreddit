@@ -4,44 +4,45 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
-    android:padding="16dp">
+    android:background="#FFFFFF"
+    tools:context=".DraftListFragment">
 
-    <!-- Title -->
     <TextView
-        android:id="@+id/drafts_title"
+        android:id="@+id/draft_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
         android:text="Draft"
-        android:textColor="#0077B6"
+        android:textColor="#006A6A"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- New Draft Button -->
-    <com.google.android.material.button.MaterialButton
+    <Button
         android:id="@+id/new_draft_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:backgroundTint="#006A6A"
         android:text="New draft"
         android:textColor="@android:color/white"
-        app:backgroundTint="#0077B6"
         app:cornerRadius="20dp"
+        app:layout_constraintBottom_toBottomOf="@+id/draft_title"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/draft_title" />
 
-    <!-- Drafts List -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/drafts_recycler_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/drafts_title"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/draft_title"
         tools:listitem="@layout/item_draft" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

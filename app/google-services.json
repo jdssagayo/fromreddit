@@ -12,7 +12,12 @@
           "package_name": "com.example.booknest"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "134815666235-evshrp8aeja9f3bamc4h8io86702ij5q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBaG_5kIdSehmvcX_VIRaT2Ps97PnTyoYg"
@@ -20,7 +25,41 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "134815666235-evshrp8aeja9f3bamc4h8io86702ij5q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:134815666235:android:f145b19390986d3974cc1e",
+        "android_client_info": {
+          "package_name": "com.example.booknest3"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "134815666235-evshrp8aeja9f3bamc4h8io86702ij5q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBaG_5kIdSehmvcX_VIRaT2Ps97PnTyoYg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "134815666235-evshrp8aeja9f3bamc4h8io86702ij5q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
