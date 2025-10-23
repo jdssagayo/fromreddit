@@ -19,22 +19,22 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:text="Chapter 3 The Kite Runner"
         android:textColor="@android:color/black"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/book_cover_image"
-        app:layout_constraintTop_toTopOf="@+id/book_cover_image" />
+        app:layout_constraintTop_toTopOf="@+id/book_cover_image"
+        tools:text="Chapter 3 The Kite Runner" />
 
     <TextView
         android:id="@+id/page_snippet_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:text="Page 32 - He try to save his sons but.."
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/book_title_text"
-        app:layout_constraintTop_toBottomOf="@+id/book_title_text" />
+        app:layout_constraintTop_toBottomOf="@+id/book_title_text"
+        tools:text="Page 32 - He try to save his sons but.." />
 
     <ProgressBar
         android:id="@+id/read_progress_bar"

@@ -20,20 +20,21 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize">
+            android:layout_height="?attr/actionBarSize"
+            app:menu="@menu/book_details_menu">
 
             <ImageView
                 android:id="@+id/back_arrow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_arrow_back" 
+                android:src="@drawable/ic_arrow_back"
                 android:layout_gravity="start" />
 
             <ImageView
                 android:id="@+id/toolbar_logo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_book_logo" 
+                android:src="@drawable/ic_book_logo"
                 android:layout_marginStart="16dp"/>
 
             <TextView
@@ -45,18 +46,11 @@
                 android:textStyle="bold"
                 android:layout_marginStart="8dp"/>
 
-            <ImageView
-                android:id="@+id/more_options"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_more_vert" 
-                android:layout_gravity="end"
-                android:layout_marginEnd="16dp"/>
-
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
     <ScrollView
+        android:id="@+id/main_scroll_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@+id/app_bar_layout"
@@ -64,92 +58,217 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:padding="16dp">
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/book_cover_card"
-                android:layout_width="180dp"
-                android:layout_height="270dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="8dp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-                <ImageView
-                    android:id="@+id/book_cover_image"
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/book_cover_card"
+                    android:layout_width="180dp"
+                    android:layout_height="270dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="8dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
+
+                    <ImageView
+                        android:id="@+id/book_cover_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        tools:srcCompat="@tools:sample/backgrounds/scenic"/>
+                </com.google.android.material.card.MaterialCardView>
+
+                <TextView
+                    android:id="@+id/book_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Beyond The Ocean Door"
+                    android:textColor="#003B46"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    app:layout_constraintTop_toBottomOf="@id/book_cover_card"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <TextView
+                    android:id="@+id/book_author"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Devin Joshua"
+                    android:textColor="#667D83"
+                    android:textSize="16sp"
+                    app:layout_constraintTop_toBottomOf="@id/book_title"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <TextView
+                    android:id="@+id/book_description"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:lineSpacingExtra="4dp"
+                    android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
+                    android:textColor="#5A5A5A"
+                    android:textSize="14sp"
+                    app:layout_constraintTop_toBottomOf="@id/book_author"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- Ratings and Reviews Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="24dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Rate this book"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tell others what you think"/>
+
+                <RatingBar
+                    android:id="@+id/user_rating_bar"
+                    style="?android:attr/ratingBarStyleIndicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="16dp"
+                    android:isIndicator="false"
+                    android:numStars="5"
+                    android:stepSize="1" />
+
+                <TextView
+                    android:id="@+id/write_review_link"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Write a review"
+                    android:textColor="#00796B"
+                    android:textStyle="bold"
+                    android:layout_marginTop="16dp"/>
+
+                <View
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    tools:srcCompat="@tools:sample/backgrounds/scenic"/>
-            </com.google.android.material.card.MaterialCardView>
+                    android:layout_height="1dp"
+                    android:background="#E0E0E0"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginBottom="24dp"/>
 
-            <TextView
-                android:id="@+id/book_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Beyond The Ocean Door"
-                android:textColor="#003B46"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                app:layout_constraintTop_toBottomOf="@id/book_cover_card"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ratings and reviews"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/book_author"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="Devin Joshua"
-                android:textColor="#667D83"
-                android:textSize="16sp"
-                app:layout_constraintTop_toBottomOf="@id/book_title"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp">
 
-            <RatingBar
-                android:id="@+id/rating_bar"
-                style="?android:attr/ratingBarStyleSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:numStars="5"
-                android:rating="4.4"
-                android:theme="@style/RatingBar"
-                app:layout_constraintTop_toBottomOf="@id/book_author"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                    <TextView
+                        android:id="@+id/average_rating_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="4.4"
+                        android:textColor="@android:color/black"
+                        android:textSize="48sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
+                    <RatingBar
+                        android:id="@+id/average_rating_stars"
+                        style="?android:attr/ratingBarStyleSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:isIndicator="true"
+                        android:numStars="5"
+                        android:theme="@style/RatingBar"
+                        app:layout_constraintStart_toStartOf="@+id/average_rating_value"
+                        app:layout_constraintTop_toBottomOf="@+id/average_rating_value"
+                        tools:rating="4.4" />
 
-            <TextView
-                android:id="@+id/rating_text_value"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="28dp"
-                android:text="4.4"
-                android:textColor="@android:color/black"
-                app:layout_constraintBaseline_toBaselineOf="@id/rating_bar"
-                app:layout_constraintStart_toEndOf="@id/rating_bar" />
+                    <TextView
+                        android:id="@+id/total_ratings_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="595,786"
+                        app:layout_constraintStart_toStartOf="@+id/average_rating_stars"
+                        app:layout_constraintTop_toBottomOf="@+id/average_rating_stars" />
 
-            <TextView
-                android:id="@+id/book_description"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:lineSpacingExtra="4dp"
-                android:text="LoLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
-                android:textColor="#5A5A5A"
-                android:textSize="14sp"
-                app:layout_constraintTop_toBottomOf="@id/rating_bar"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginStart="24dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/average_rating_value"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent">
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                        <!-- 5 Stars -->
+                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="5"/>
+                            <ProgressBar android:id="@+id/progress_5_stars" style="?android:attr/progressBarStyleHorizontal" android:layout_width="0dp" android:layout_height="8dp" android:layout_weight="1" android:layout_marginStart="8dp" android:progressDrawable="@drawable/custom_progress_bar"/>
+                        </LinearLayout>
+                        <!-- 4 Stars -->
+                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="4"/>
+                            <ProgressBar android:id="@+id/progress_4_stars" style="?android:attr/progressBarStyleHorizontal" android:layout_width="0dp" android:layout_height="8dp" android:layout_weight="1" android:layout_marginStart="8dp" android:progressDrawable="@drawable/custom_progress_bar"/>
+                        </LinearLayout>
+                        <!-- 3 Stars -->
+                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="3"/>
+                            <ProgressBar android:id="@+id/progress_3_stars" style="?android:attr/progressBarStyleHorizontal" android:layout_width="0dp" android:layout_height="8dp" android:layout_weight="1" android:layout_marginStart="8dp" android:progressDrawable="@drawable/custom_progress_bar"/>
+                        </LinearLayout>
+                        <!-- 2 Stars -->
+                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="2"/>
+                            <ProgressBar android:id="@+id/progress_2_stars" style="?android:attr/progressBarStyleHorizontal" android:layout_width="0dp" android:layout_height="8dp" android:layout_weight="1" android:layout_marginStart="8dp" android:progressDrawable="@drawable/custom_progress_bar"/>
+                        </LinearLayout>
+                        <!-- 1 Star -->
+                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="1"/>
+                            <ProgressBar android:id="@+id/progress_1_star" style="?android:attr/progressBarStyleHorizontal" android:layout_width="0dp" android:layout_height="8dp" android:layout_weight="1" android:layout_marginStart="8dp" android:progressDrawable="@drawable/custom_progress_bar"/>
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/reviews_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:nestedScrollingEnabled="false"
+                    tools:itemCount="3"
+                    tools:listitem="@layout/item_review" />
+
+            </LinearLayout>
+
+        </LinearLayout>
     </ScrollView>
 
     <LinearLayout
@@ -163,12 +282,12 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/save_button"
+            android:id="@+id/bookmark_button"
             android:layout_width="0dp"
             android:layout_height="60dp"
             android:layout_weight="1"
             android:layout_marginEnd="8dp"
-            android:text="Save"
+            android:text="Bookmark"
             app:icon="@drawable/ic_bookmark_border"
             app:iconGravity="textStart"
             android:backgroundTint="#E0F2F1"
@@ -184,6 +303,8 @@
             android:text="Start Reading"
             android:backgroundTint="#00796B"
             android:textColor="@android:color/white"
+            app:icon="@drawable/ic_book_logo"
+            app:iconGravity="textStart"
             app:cornerRadius="30dp"/>
 
     </LinearLayout>

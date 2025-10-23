@@ -4,10 +4,6 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="RatingBar" parent="Widget.AppCompat.RatingBar.Small">
-        <!-- Define custom properties for your rating bar style -->
-    </style>
-
     <!-- Styles for Profile Screen Stats -->
     <style name="StatCard" parent="Widget.MaterialComponents.CardView">
         <item name="android:layout_width">0dp</item>
@@ -26,6 +22,13 @@
         <item name="android:textColor">@android:color/black</item>
         <item name="android:textSize">14sp</item>
         <item name="android:lineSpacingExtra">4sp</item>
+    </style>
+
+    <!-- Divider Style -->
+    <style name="Divider">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">#E0E0E0</item>
     </style>
 
 </resources>

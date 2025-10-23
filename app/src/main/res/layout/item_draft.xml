@@ -37,12 +37,12 @@
             app:layout_constraintEnd_toStartOf="@+id/edit_icon"/>
 
         <TextView
-            android:id="@+id/draft_last_modified"
-            android:layout_width="0dp"
+            android:id="@+id/draft_description_label"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
+            android:text="Description"
             android:textSize="12sp"
-            tools:text="Jan 01, 2024"
             app:layout_constraintTop_toBottomOf="@+id/draft_book_title"
             app:layout_constraintStart_toStartOf="@+id/draft_book_title"/>
 
@@ -50,12 +50,12 @@
             android:id="@+id/draft_description_text"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="2dp"
             android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut consequat..."
             android:textSize="12sp"
             android:ellipsize="end"
-            android:maxLines="3"
-            app:layout_constraintTop_toBottomOf="@+id/draft_last_modified"
+            android:maxLines="4"
+            app:layout_constraintTop_toBottomOf="@+id/draft_description_label"
             app:layout_constraintStart_toStartOf="@+id/draft_book_title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="@+id/draft_book_cover"/>

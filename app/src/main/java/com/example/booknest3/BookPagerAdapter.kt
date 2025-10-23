@@ -1,28 +1,13 @@
 package com.example.booknest3
 
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
+import androidx.fragment.app.Fragment
+import androidx.viewpager2.adapter.FragmentStateAdapter
 
-class BookPagerAdapter(
-    private val bookList: List<Book>,
-    private val onItemClick: (Book) -> Unit // Dinagdag ko na po ito para umayon sa bagong BookAdapter
-) : RecyclerView.Adapter<BookPagerAdapter.BookPagerViewHolder>() {
+class BookPagerAdapter(fragment: Fragment, private val pages: List<String>) : FragmentStateAdapter(fragment) {
 
-    inner class BookPagerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val bookAdapter = BookAdapter(bookList, R.layout.item_book_grid, onItemClick) // Inayos ko na po ito
+    override fun getItemCount(): Int = pages.size
+
+    override fun createFragment(position: Int): Fragment {
+        return BookPageFragment.newInstance(pages[position])
     }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookPagerViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_book_pager, parent, false)
-        return BookPagerViewHolder(view)
-    }
-
-    override fun onBindViewHolder(holder: BookPagerViewHolder, position: Int) {
-        val recyclerView = holder.itemView.findViewById<RecyclerView>(R.id.pager_recycler_view)
-        recyclerView.adapter = holder.bookAdapter
-    }
-
-    override fun getItemCount() = 1
 }

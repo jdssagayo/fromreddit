@@ -6,15 +6,20 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 
 class BookAdapter(
-    private val bookList: List<Book>,
+    private var bookList: List<Book>,
     private val layoutId: Int,
     private val onItemClick: (Book) -> Unit
 ) : RecyclerView.Adapter<BookAdapter.BookViewHolder>() {
 
+    fun updateBooks(newBooks: List<Book>) {
+        bookList = newBooks
+        notifyDataSetChanged()
+    }
+
     inner class BookViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        // Inayos ko na po ang mga IDs para tumugma sa item_book_download.xml
         val bookCover: ImageView = itemView.findViewById(R.id.book_cover_image)
         val bookTitle: TextView? = itemView.findViewById(R.id.book_title)
         val bookAuthor: TextView? = itemView.findViewById(R.id.book_author)
@@ -36,9 +41,17 @@ class BookAdapter(
 
     override fun onBindViewHolder(holder: BookViewHolder, position: Int) {
         val currentBook = bookList[position]
-        holder.bookCover.setImageResource(currentBook.coverImage)
+        
+        if (currentBook.coverImageUrl != null) {
+            Glide.with(holder.itemView.context)
+                .load(currentBook.coverImageUrl)
+                .into(holder.bookCover)
+        } else {
+            // Optional: set a placeholder image if no cover URL is available
+            holder.bookCover.setImageResource(R.drawable.icon)
+        }
+
         holder.bookTitle?.text = currentBook.title
-        // Idinagdag ko na po ang pag-set ng author.
         holder.bookAuthor?.text = currentBook.author
     }
 

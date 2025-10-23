@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    app:cardBackgroundColor="#008000" > <!-- Lighter Green -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/page_title_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            tools:text="Page 1" />
+
+        <ImageView
+            android:id="@+id/page_word_count_icon"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:src="@android:drawable/ic_menu_recent_history"
+            app:tint="@android:color/white"
+            android:layout_below="@id/page_title_text"
+            android:layout_marginTop="8dp"/>
+
+        <TextView
+            android:id="@+id/page_word_count_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/page_word_count_icon"
+            android:layout_alignTop="@id/page_word_count_icon"
+            android:layout_alignBottom="@id/page_word_count_icon"
+            android:gravity="center_vertical"
+            android:layout_marginStart="4dp"
+            android:textColor="@android:color/white"
+            tools:text="293 words" />
+
+        <ImageButton
+            android:id="@+id/delete_page_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@android:drawable/ic_menu_delete"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            app:tint="@android:color/white" />
+
+    </RelativeLayout>
+
+</com.google.android.material.card.MaterialCardView>

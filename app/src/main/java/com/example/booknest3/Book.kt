@@ -1,9 +1,16 @@
 package com.example.booknest3
 
-// This is the blueprint for a single book.
-// Inayos ko na po para may kasama nang author.
+import com.google.firebase.firestore.DocumentId
+
 data class Book(
-    val title: String,
-    val coverImage: Int,
-    val author: String
+    @DocumentId val id: String = "",
+    val title: String = "",
+    val author: String = "",
+    val description: String = "",
+    val coverImageUrl: String? = null,
+    // Fields for bookmark details, only populated for bookmark screen
+    var chapter: String? = null,
+    var page: Int = 0,
+    var progress: Int = 0,
+    var snippet: String? = null
 )

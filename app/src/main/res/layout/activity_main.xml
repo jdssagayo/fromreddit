@@ -15,14 +15,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- BOTTOM NAVIGATION BAR - UI RESTORED AS PER YOUR REQUEST -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="#FFFFFF"
         app:elevation="8dp"
-        app:itemIconTint="@color/bottom_nav_icon_tint_simple"
+        app:itemIconTint="@color/bottom_nav_icon_tint"
         app:labelVisibilityMode="unlabeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
