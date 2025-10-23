@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Base64
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -20,7 +21,6 @@ import androidx.fragment.app.DialogFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
 import java.util.UUID
 
 class PublishBookDialogFragment : DialogFragment() {
@@ -37,7 +37,6 @@ class PublishBookDialogFragment : DialogFragment() {
 
     private val db = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
-    private val storage = FirebaseStorage.getInstance()
 
     private val pickImage = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
@@ -111,21 +110,18 @@ class PublishBookDialogFragment : DialogFragment() {
                 }
 
                 if (imageUri != null) {
-                    val imageRef = storage.reference.child("book_covers/${UUID.randomUUID()}")
-                    val uploadTask = imageRef.putFile(imageUri!!)
-
-                    uploadTask.continueWithTask { task ->
-                        if (!task.isSuccessful) {
-                            task.exception?.let { throw it }
-                        }
-                        imageRef.downloadUrl
-                    }.addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            val downloadUrl = task.result
-                            createBookDocument(userId, title, author, description, downloadUrl.toString(), fullContent)
+                    try {
+                        val inputStream = requireContext().contentResolver.openInputStream(imageUri!!)
+                        val imageBytes = inputStream?.readBytes()
+                        inputStream?.close()
+                        if (imageBytes != null) {
+                            val imageBase64 = Base64.encodeToString(imageBytes, Base64.DEFAULT)
+                            createBookDocument(userId, title, author, description, imageBase64, fullContent)
                         } else {
-                            Toast.makeText(requireContext(), "Image upload failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(requireContext(), "Failed to read image", Toast.LENGTH_SHORT).show()
                         }
+                    } catch (e: Exception) {
+                        Toast.makeText(requireContext(), "Image processing failed: ${e.message}", Toast.LENGTH_SHORT).show()
                     }
                 } else {
                     createBookDocument(userId, title, author, description, null, fullContent)
@@ -136,14 +132,14 @@ class PublishBookDialogFragment : DialogFragment() {
             }
     }
 
-    private fun createBookDocument(userId: String, title: String, author: String, description: String, coverImageUrl: String?, content: String) {
+    private fun createBookDocument(userId: String, title: String, author: String, description: String, coverImageBase64: String?, content: String) {
         val bookData = hashMapOf(
             "title" to title,
             "author" to author,
             "description" to description,
             "authorId" to userId,
             "content" to content,
-            "coverImageUrl" to coverImageUrl,
+            "coverImageUrl" to coverImageBase64,
             "publishedAt" to FieldValue.serverTimestamp()
         )
 

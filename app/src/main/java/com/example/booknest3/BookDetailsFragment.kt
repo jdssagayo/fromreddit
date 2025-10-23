@@ -1,9 +1,12 @@
 package com.example.booknest3
 
+import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -14,6 +17,7 @@ import android.widget.ProgressBar
 import android.widget.RatingBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,6 +29,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.FieldPath
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
@@ -55,6 +60,13 @@ class BookDetailsFragment : Fragment() {
     private lateinit var progress1Star: ProgressBar
     private lateinit var userRatingBar: RatingBar
     private lateinit var writeReviewLink: TextView
+
+    private val writeReviewLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            // Review was submitted or edited, reload ratings and reviews
+            bookId?.let { loadRatingsAndReviews(it) }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -126,52 +138,153 @@ class BookDetailsFragment : Fragment() {
         val openReviewActivity = { ->
             val intent = Intent(requireActivity(), WriteReviewActivity::class.java)
             intent.putExtra("BOOK_ID", bookId)
-            startActivity(intent)
+            writeReviewLauncher.launch(intent)
         }
 
         writeReviewLink.setOnClickListener {
             openReviewActivity()
         }
 
-        userRatingBar.setOnRatingBarChangeListener { _, _, _ ->
+        // Prevent direct rating change, must open the review activity
+        userRatingBar.setOnTouchListener { _, _ ->
             openReviewActivity()
+            true
         }
     }
 
     private fun setupReviewsRecyclerView() {
-        reviewAdapter = ReviewAdapter(reviewsList)
+        reviewAdapter = ReviewAdapter(reviewsList) { review, action ->
+            handleReviewOption(review, action)
+        }
         reviewsRecyclerView.adapter = reviewAdapter
         reviewsRecyclerView.layoutManager = LinearLayoutManager(context)
         reviewsRecyclerView.isNestedScrollingEnabled = false
     }
 
+    private fun handleReviewOption(review: Review, action: String) {
+        when (action) {
+            "edit" -> editReview(review)
+            "delete" -> deleteReview(review)
+        }
+    }
+
+    private fun editReview(review: Review) {
+        val intent = Intent(requireActivity(), WriteReviewActivity::class.java)
+        intent.putExtra("BOOK_ID", bookId)
+        intent.putExtra("EXISTING_COMMENT", review.comment)
+        intent.putExtra("EXISTING_RATING", review.rating)
+        writeReviewLauncher.launch(intent)
+    }
+
+    private fun deleteReview(review: Review) {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Delete Review")
+            .setMessage("Are you sure you want to delete your review?")
+            .setPositiveButton("Delete") { _, _ ->
+                bookId?.let { bId ->
+                    db.collection("books").document(bId)
+                        .collection("reviews").document(review.userId)
+                        .delete()
+                        .addOnSuccessListener {
+                            Toast.makeText(context, "Review deleted", Toast.LENGTH_SHORT).show()
+                            loadRatingsAndReviews(bId)
+                        }
+                        .addOnFailureListener { e ->
+                            Toast.makeText(context, "Error deleting review: ${e.message}", Toast.LENGTH_SHORT).show()
+                        }
+                }
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
     private fun loadRatingsAndReviews(bookId: String) {
         db.collection("books").document(bookId).collection("reviews")
             .orderBy("timestamp", Query.Direction.DESCENDING)
-            .limit(20) // Get the latest 20 reviews
+            .limit(20)
             .get()
-            .addOnSuccessListener { snapshot ->
-                if (snapshot.isEmpty) {
-                    // You can show a "No reviews yet" message here if you want
+            .addOnSuccessListener { reviewSnapshot ->
+                if (reviewSnapshot.isEmpty) {
+                    reviewsList.clear()
+                    reviewAdapter.notifyDataSetChanged()
+                    updateRatingsSummaryUI(reviewsList)
+                    loadCurrentUserRating() // Ensure rating bar is also cleared
                     return@addOnSuccessListener
                 }
-                reviewsList.clear()
-                for (doc in snapshot.documents) {
-                    val review = doc.toObject(Review::class.java)
-                    if (review != null) {
-                        reviewsList.add(review)
-                    }
+
+                val originalReviews = reviewSnapshot.toObjects(Review::class.java)
+                val userIds = originalReviews.map { it.userId }.distinct().filter { it.isNotEmpty() }
+
+                if (userIds.isEmpty()) {
+                    // No valid user IDs, display reviews with original data
+                    reviewsList.clear()
+                    reviewsList.addAll(originalReviews)
+                    reviewAdapter.notifyDataSetChanged()
+                    updateRatingsSummaryUI(reviewsList)
+                    loadCurrentUserRating()
+                    return@addOnSuccessListener
                 }
-                reviewAdapter.notifyDataSetChanged()
-                updateRatingsSummaryUI(reviewsList)
+
+                db.collection("users").whereIn(FieldPath.documentId(), userIds).get()
+                    .addOnSuccessListener { userSnapshot ->
+                        val userMap = userSnapshot.documents.associateBy(
+                            { it.id },
+                            { it.getString("username") to it.getString("photoUrl") }
+                        )
+
+                        val updatedReviews = originalReviews.map { review ->
+                            userMap[review.userId]?.let {
+                                review.copy(username = it.first ?: review.username, userProfileUrl = it.second ?: review.userProfileUrl)
+                            } ?: review
+                        }
+
+                        reviewsList.clear()
+                        reviewsList.addAll(updatedReviews)
+                        reviewAdapter.notifyDataSetChanged()
+                        updateRatingsSummaryUI(reviewsList)
+                        loadCurrentUserRating()
+                    }
+                    .addOnFailureListener { e ->
+                        Log.e("BookDetails", "Error fetching user data for reviews", e)
+                        // If fetching users fails, just show the stored (potentially stale) data
+                        reviewsList.clear()
+                        reviewsList.addAll(originalReviews)
+                        reviewAdapter.notifyDataSetChanged()
+                        updateRatingsSummaryUI(reviewsList)
+                        loadCurrentUserRating()
+                    }
             }
             .addOnFailureListener { e ->
                 Log.e("BookDetails", "Error loading reviews", e)
             }
     }
 
+    private fun loadCurrentUserRating() {
+        val userId = auth.currentUser?.uid ?: return
+        bookId?.let {
+            db.collection("books").document(it).collection("reviews").document(userId).get()
+                .addOnSuccessListener { userReviewDoc ->
+                    userRatingBar.rating = if (userReviewDoc.exists()) {
+                        userReviewDoc.getDouble("rating")?.toFloat() ?: 0f
+                    } else {
+                        0f
+                    }
+                }
+        }
+    }
+
     private fun updateRatingsSummaryUI(reviews: List<Review>) {
-        if (reviews.isEmpty()) return
+        if (reviews.isEmpty()) {
+            averageRatingValue.text = "0.0"
+            averageRatingStars.rating = 0f
+            totalRatingsCount.text = "0 ratings"
+            progress5Stars.progress = 0
+            progress4Stars.progress = 0
+            progress3Stars.progress = 0
+            progress2Stars.progress = 0
+            progress1Star.progress = 0
+            return
+        }
 
         val totalReviews = reviews.size
         val average = reviews.sumOf { it.rating.toDouble() } / totalReviews
@@ -186,13 +299,13 @@ class BookDetailsFragment : Fragment() {
         val decimalFormat = DecimalFormat("#.##")
         averageRatingValue.text = decimalFormat.format(average)
         averageRatingStars.rating = average.toFloat()
-        totalRatingsCount.text = totalReviews.toString()
+        totalRatingsCount.text = "$totalReviews ratings"
 
-        progress5Stars.progress = if (totalReviews > 0) (ratingCounts[4] * 100) / totalReviews else 0
-        progress4Stars.progress = if (totalReviews > 0) (ratingCounts[3] * 100) / totalReviews else 0
-        progress3Stars.progress = if (totalReviews > 0) (ratingCounts[2] * 100) / totalReviews else 0
-        progress2Stars.progress = if (totalReviews > 0) (ratingCounts[1] * 100) / totalReviews else 0
-        progress1Star.progress = if (totalReviews > 0) (ratingCounts[0] * 100) / totalReviews else 0
+        progress5Stars.progress = (ratingCounts[4] * 100) / totalReviews
+        progress4Stars.progress = (ratingCounts[3] * 100) / totalReviews
+        progress3Stars.progress = (ratingCounts[2] * 100) / totalReviews
+        progress2Stars.progress = (ratingCounts[1] * 100) / totalReviews
+        progress1Star.progress = (ratingCounts[0] * 100) / totalReviews
     }
 
     private fun setupToolbar() {
@@ -352,8 +465,18 @@ class BookDetailsFragment : Fragment() {
                         bookAuthorTextView.text = book.author
                         bookDescriptionTextView.text = book.description
                         
-                        if (book.coverImageUrl != null) {
-                            Glide.with(this).load(book.coverImageUrl).into(bookCoverImageView)
+                        val imageUrl = book.coverImageUrl
+                        if (!imageUrl.isNullOrEmpty()) {
+                            try {
+                                if (imageUrl.startsWith("http")) {
+                                    Glide.with(this).load(imageUrl).into(bookCoverImageView)
+                                } else {
+                                    val imageBytes = Base64.decode(imageUrl, Base64.DEFAULT)
+                                    Glide.with(this).load(imageBytes).into(bookCoverImageView)
+                                }
+                            } catch (e: IllegalArgumentException) {
+                                bookCoverImageView.setImageResource(R.drawable.icon)
+                            }
                         } else {
                             bookCoverImageView.setImageResource(R.drawable.icon) // Placeholder
                         }

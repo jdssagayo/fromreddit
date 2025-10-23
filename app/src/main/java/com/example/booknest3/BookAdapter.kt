@@ -1,5 +1,6 @@
 package com.example.booknest3
 
+import android.util.Base64
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -41,13 +42,28 @@ class BookAdapter(
 
     override fun onBindViewHolder(holder: BookViewHolder, position: Int) {
         val currentBook = bookList[position]
-        
-        if (currentBook.coverImageUrl != null) {
-            Glide.with(holder.itemView.context)
-                .load(currentBook.coverImageUrl)
-                .into(holder.bookCover)
+
+        val imageUrl = currentBook.coverImageUrl
+        if (!imageUrl.isNullOrEmpty()) {
+            try {
+                if (imageUrl.startsWith("http")) {
+                    // Handle old Firebase Storage URLs
+                    Glide.with(holder.itemView.context)
+                        .load(imageUrl)
+                        .into(holder.bookCover)
+                } else {
+                    // Handle new Base64 strings
+                    val imageBytes = Base64.decode(imageUrl, Base64.DEFAULT)
+                    Glide.with(holder.itemView.context)
+                        .load(imageBytes)
+                        .into(holder.bookCover)
+                }
+            } catch (e: IllegalArgumentException) {
+                // If decoding fails, set a placeholder
+                holder.bookCover.setImageResource(R.drawable.icon)
+            }
         } else {
-            // Optional: set a placeholder image if no cover URL is available
+            // If no image URL is provided, set a placeholder
             holder.bookCover.setImageResource(R.drawable.icon)
         }
 

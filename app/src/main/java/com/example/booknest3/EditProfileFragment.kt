@@ -4,6 +4,8 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Base64
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,7 +20,7 @@ import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
+import java.lang.IllegalArgumentException
 
 class EditProfileFragment : Fragment() {
 
@@ -33,7 +35,6 @@ class EditProfileFragment : Fragment() {
 
     private val db = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
-    private val storage = FirebaseStorage.getInstance()
 
     private val pickImage = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         if (it.resultCode == Activity.RESULT_OK) {
@@ -85,9 +86,31 @@ class EditProfileFragment : Fragment() {
                         bioEditText.setText(document.getString("bio"))
                         val photoUrl = document.getString("photoUrl")
                         if (!photoUrl.isNullOrEmpty()) {
-                            Glide.with(this@EditProfileFragment).load(photoUrl).into(profileImageView)
+                            try {
+                                if (photoUrl.startsWith("http")) {
+                                    // Handle old Firebase Storage URLs
+                                    Glide.with(this@EditProfileFragment)
+                                        .load(photoUrl)
+                                        .into(profileImageView)
+                                } else {
+                                    // Handle new Base64 strings
+                                    val imageBytes = Base64.decode(photoUrl, Base64.DEFAULT)
+                                    Glide.with(this@EditProfileFragment)
+                                        .load(imageBytes)
+                                        .into(profileImageView)
+                                }
+                            } catch (e: IllegalArgumentException) {
+                                Log.e("EditProfileFragment", "Error decoding Base64 image", e)
+                                // Optionally set a placeholder
+                            }
                         }
+                    } else {
+                        Log.d("EditProfileFragment", "No such document")
                     }
+                }
+                .addOnFailureListener { e ->
+                    Log.e("EditProfileFragment", "Error loading profile", e)
+                    Toast.makeText(context, "Failed to load profile: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
         }
     }
@@ -101,38 +124,42 @@ class EditProfileFragment : Fragment() {
         saveButton.isEnabled = false // Prevent multiple clicks
 
         if (selectedImageUri != null) {
-            val storageRef = storage.reference.child("profile_images/${user.uid}")
-            storageRef.putFile(selectedImageUri!!)
-                .addOnSuccessListener { 
-                    storageRef.downloadUrl.addOnSuccessListener { uri ->
-                        updateProfileData(user.uid, name, username, bio, uri.toString())
-                    }
-                }.addOnFailureListener { e ->
-                    Toast.makeText(requireContext(), "Image upload failed: ${e.message}", Toast.LENGTH_SHORT).show()
+            try {
+                val inputStream = requireContext().contentResolver.openInputStream(selectedImageUri!!)
+                val imageBytes = inputStream?.readBytes()
+                inputStream?.close()
+                if (imageBytes != null) {
+                    val imageBase64 = Base64.encodeToString(imageBytes, Base64.DEFAULT)
+                    updateProfileData(user.uid, name, username, bio, imageBase64)
+                } else {
+                    Toast.makeText(requireContext(), "Failed to read image", Toast.LENGTH_SHORT).show()
                     saveButton.isEnabled = true
                 }
+            } catch (e: Exception) {
+                Toast.makeText(requireContext(), "Image processing failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                saveButton.isEnabled = true
+            }
         } else {
             // No new image selected, just update text fields
             updateProfileData(user.uid, name, username, bio, null)
         }
     }
 
-    private fun updateProfileData(userId: String, name: String, username: String, bio: String, newPhotoUrl: String?) {
+    private fun updateProfileData(userId: String, name: String, username: String, bio: String, newPhotoBase64: String?) {
         val user = auth.currentUser!!
 
         val userMap = mutableMapOf<String, Any>(
             "username" to username,
             "bio" to bio
         )
-        if (newPhotoUrl != null) {
-            userMap["photoUrl"] = newPhotoUrl
+        // Only include the photoUrl in the map if a new image was selected.
+        // If it's null, Firestore won't update the field.
+        if (newPhotoBase64 != null) {
+            userMap["photoUrl"] = newPhotoBase64
         }
 
         val profileUpdatesBuilder = UserProfileChangeRequest.Builder()
             .setDisplayName(name)
-        if (newPhotoUrl != null) {
-            profileUpdatesBuilder.setPhotoUri(Uri.parse(newPhotoUrl))
-        }
 
         user.updateProfile(profileUpdatesBuilder.build()).addOnCompleteListener { authTask ->
             if (authTask.isSuccessful) {

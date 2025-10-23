@@ -12,9 +12,10 @@
         android:id="@+id/back_arrow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_arrow_back"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
+        android:padding="8dp"
+        android:src="@drawable/ic_arrow_back"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -25,109 +26,136 @@
         android:text="My Profile"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/back_arrow"
+        app:layout_constraintEnd_toStartOf="@+id/edit_profile_button"
+        app:layout_constraintStart_toEndOf="@+id/back_arrow"
+        app:layout_constraintTop_toTopOf="@+id/back_arrow" />
+
+    <ImageView
+        android:id="@+id/menu_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:padding="8dp"
+        android:src="@drawable/ic_menu"
+        app:layout_constraintBottom_toBottomOf="@+id/back_arrow"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/back_arrow"
-        app:layout_constraintBottom_toBottomOf="@id/back_arrow" />
+        app:layout_constraintTop_toTopOf="@+id/back_arrow" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/edit_profile_button"
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Edit Profile"
         android:layout_marginEnd="8dp"
+        android:text="Edit Profile"
         android:textAllCaps="false"
+        app:layout_constraintBottom_toBottomOf="@+id/menu_button"
         app:layout_constraintEnd_toStartOf="@+id/menu_button"
-        app:layout_constraintTop_toTopOf="@id/menu_button"
-        app:layout_constraintBottom_toBottomOf="@+id/menu_button" />
+        app:layout_constraintTop_toTopOf="@+id/menu_button" />
 
-    <ImageView
-        android:id="@+id/menu_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_menu"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/back_arrow"
-        app:layout_constraintBottom_toBottomOf="@id/back_arrow" />
 
     <!-- Profile Info -->
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profile_image"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
         android:src="@drawable/saitama_placeholder"
-        app:layout_constraintTop_toBottomOf="@id/profile_title"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/back_arrow" />
 
     <TextView
         android:id="@+id/profile_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Saitama"
         android:textColor="@android:color/black"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@+id/profile_image"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/profile_image"
+        tools:text="Saitama" />
 
     <TextView
         android:id="@+id/profile_handle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:text="\@saitama.1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profile_name" />
+        app:layout_constraintTop_toBottomOf="@+id/profile_name"
+        tools:text="@saitama.1" />
 
     <TextView
         android:id="@+id/profile_bio"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:gravity="center"
-        android:text="Avid reader &amp; indie author | Fantasy &amp; Sci-Fi enthusiast | Currently writing my debut novel\nwww.facebook.blahblah"
-        app:layout_constraintTop_toBottomOf="@+id/profile_handle"
-        app:layout_constraintStart_toStartOf="parent"
+        android:paddingStart="24dp"
+        android.paddingEnd="24dp"
         app:layout_constraintEnd_toEndOf="parent"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profile_handle"
+        tools:text="Avid reader &amp; indie author | Fantasy &amp; Sci-Fi enthusiast | Currently writing my debut novel\nwww.facebook.blahblah" />
 
     <!-- Card Stats -->
-    <LinearLayout
-        android:id="@+id/card_stats_layout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:orientation="horizontal"
-        android:weightSum="3"
-        app:layout_constraintTop_toBottomOf="@+id/profile_bio"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/books_read_card"
+        style="@style/StatCard"
+        app:layout_constraintEnd_toStartOf="@+id/published_card"
+        app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/published_card">
+
+        <TextView
+            android:id="@+id/stat_books_read_text"
+            style="@style/StatText"
+            tools:text="Books read\n1" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/published_card"
+        style="@style/StatCard"
+        android:layout_marginTop="24dp"
+        app:layout_constraintEnd_toStartOf="@+id/streak_card"
+        app:layout_constraintStart_toEndOf="@+id/books_read_card"
+        app:layout_constraintTop_toBottomOf="@+id/profile_bio">
+
+        <TextView
+            android:id="@+id/stat_published_text"
+            style="@style/StatText"
+            tools:text="Published\n3" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/streak_card"
+        style="@style/StatCard"
         app:layout_constraintEnd_toEndOf="parent"
-        android:paddingStart="12dp"
-        android:paddingEnd="12dp">
-        <com.google.android.material.card.MaterialCardView style="@style/StatCard"><TextView style="@style/StatText" android:text="Books read\n1"/></com.google.android.material.card.MaterialCardView>
-        <com.google.android.material.card.MaterialCardView style="@style/StatCard"><TextView style="@style/StatText" android:text="Published\n3"/></com.google.android.material.card.MaterialCardView>
-        <com.google.android.material.card.MaterialCardView style="@style/StatCard"><TextView style="@style/StatText" android:text="Streak\n7 days"/></com.google.android.material.card.MaterialCardView>
-    </LinearLayout>
+        app:layout_constraintStart_toEndOf="@+id/published_card"
+        app:layout_constraintTop_toTopOf="@+id/published_card">
+
+        <TextView
+            android:id="@+id/stat_streak_text"
+            style="@style/StatText"
+            android:text="Streak\n7 days" />
+    </com.google.android.material.card.MaterialCardView>
+
 
     <!-- Tabs -->
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tab_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:tabGravity="fill"
-        app:tabMode="fixed"
-        app:layout_constraintTop_toBottomOf="@+id/card_stats_layout"
+        android:layout_marginTop="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/published_card"
+        app:tabGravity="fill"
+        app:tabMode="fixed">
 
         <com.google.android.material.tabs.TabItem android:text="Reading" />
         <com.google.android.material.tabs.TabItem android:text="Done" />
@@ -140,10 +168,10 @@
         android:id="@+id/books_recycler_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@+id/tab_layout"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:listitem="@layout/item_book_profile"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tab_layout"
+        tools:listitem="@layout/item_book_profile" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

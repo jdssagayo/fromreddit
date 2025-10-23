@@ -1,18 +1,26 @@
 package com.example.booknest3
 
+import android.content.Context
+import android.util.Base64
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.PopupMenu
 import android.widget.RatingBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.firebase.auth.FirebaseAuth
 import de.hdodenhof.circleimageview.CircleImageView
+import java.lang.IllegalArgumentException
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class ReviewAdapter(private val reviews: List<Review>) : RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder>() {
+class ReviewAdapter(
+    private val reviews: List<Review>,
+    private val onOptionSelected: (Review, String) -> Unit
+) : RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder>() {
 
     inner class ReviewViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val userAvatar: CircleImageView = itemView.findViewById(R.id.user_avatar)
@@ -30,10 +38,11 @@ class ReviewAdapter(private val reviews: List<Review>) : RecyclerView.Adapter<Re
 
     override fun onBindViewHolder(holder: ReviewViewHolder, position: Int) {
         val review = reviews[position]
+        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
 
-        holder.userName.text = review.userName
+        holder.userName.text = review.username
         holder.reviewRating.rating = review.rating
-        holder.reviewText.text = review.reviewText
+        holder.reviewText.text = review.comment
 
         // Format the date
         review.timestamp?.let {
@@ -42,17 +51,52 @@ class ReviewAdapter(private val reviews: List<Review>) : RecyclerView.Adapter<Re
         }
 
         // Load user avatar
-        if (!review.userAvatarUrl.isNullOrEmpty()) {
-            Glide.with(holder.itemView.context)
-                .load(review.userAvatarUrl)
-                .into(holder.userAvatar)
-        } else {
-            holder.userAvatar.setImageResource(R.drawable.ic_profile) // Default avatar
-        }
+        loadAvatar(holder.itemView.context, review.userProfileUrl, holder.userAvatar)
 
-        // Handle more options click if needed in the future
-        holder.moreOptions.setOnClickListener {
-            // Implement more options logic here
+        // Handle "more options" button visibility and click
+        if (currentUserId != null && review.userId == currentUserId) {
+            holder.moreOptions.visibility = View.VISIBLE
+            holder.moreOptions.setOnClickListener { view ->
+                showPopupMenu(view, review)
+            }
+        } else {
+            holder.moreOptions.visibility = View.GONE
+        }
+    }
+
+    private fun showPopupMenu(view: View, review: Review) {
+        val popup = PopupMenu(view.context, view)
+        popup.inflate(R.menu.review_options_menu)
+        popup.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.menu_edit_review -> {
+                    onOptionSelected(review, "edit")
+                    true
+                }
+                R.id.menu_delete_review -> {
+                    onOptionSelected(review, "delete")
+                    true
+                }
+                else -> false
+            }
+        }
+        popup.show()
+    }
+
+    private fun loadAvatar(context: Context, imageUrl: String?, imageView: ImageView) {
+        if (!imageUrl.isNullOrEmpty()) {
+            try {
+                if (imageUrl.startsWith("http")) {
+                    Glide.with(context).load(imageUrl).into(imageView)
+                } else {
+                    val imageBytes = Base64.decode(imageUrl, Base64.DEFAULT)
+                    Glide.with(context).load(imageBytes).into(imageView)
+                }
+            } catch (e: IllegalArgumentException) {
+                imageView.setImageResource(R.drawable.ic_profile)
+            }
+        } else {
+            imageView.setImageResource(R.drawable.ic_profile)
         }
     }
 
